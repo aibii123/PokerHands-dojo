@@ -1,26 +1,35 @@
 #pragma once
 
+#include <string>
 #include <vector>
-#include "Card.hpp"
 
-enum HandRank
+using namespace std;
+
+enum CardsRank
 {
-    HAND_RANK_HIGH_CARD = 0,
-    HAND_RANK_ONE_PAIR,
-    HAND_RANK_TWO_PAIRS
+    CARDS_RANK_HIGH_CARD = 0,
+    CARDS_RANK_ONE_PAIR,
+    CARDS_RANK_TWO_PAIRS
 };
 
-const int INVALID_VALUE = -1;
+class Card
+{
+public:
+    Card(const string&);
+    
+    int m_value;
+    char m_suit;   
+};
 
 class PokerHands
 {
 public:
-    int compare(std::vector<Card>, std::vector<Card>);
+     int compare(vector<Card>, vector<Card>);
 private:
-    std::vector<int> valuesOfPairs(std::vector<Card>);
-    HandRank         calcRank(std::vector<Card>);
-    int              findHighestValue(std::vector<Card>);
-    int              compareHighCard(std::vector<Card>, std::vector<Card>);
-    int              compareOnePair(std::vector<Card>, std::vector<Card>);
-    int              compareTwoPairs(std::vector<Card>, std::vector<Card>);
+     bool isOnePair(vector<Card>);
+     bool isTwoPairs(vector<Card>);
+     CardsRank calcRank(vector<Card>);
+     int findHighestVal(vector<Card>);
+     int getThePairValueFromOnePair(vector<Card>);
+     void eraseTheSameValuesInTwoHands(int p_val, vector<Card> & p_cards1, vector<Card> & p_cards2);
 };
