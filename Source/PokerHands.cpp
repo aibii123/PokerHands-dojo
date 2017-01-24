@@ -18,7 +18,7 @@ map<char, int> g_map
     {'A', 14}
 };
 
-const int INVALID_VALUE = -1;
+const int INVALID_VALUE = 0xffff;
 
 Card::Card(const string& p_cardVal)
 {
@@ -32,28 +32,16 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
     CardsRank l_c1 = calcRank(p_cards1);
     CardsRank l_c2 = calcRank(p_cards2);
     
-    if(l_c1 == l_c2)
+    if (l_c1 == l_c2)
     {
-        if(l_c1 == CARDS_RANK_ONE_PAIR)
+        if (CARDS_RANK_ONE_PAIR == l_c1  or CARDS_RANK_THREE_OF_A_KIND == l_c1)
         {
-            auto l_val1 = getThePairValueFromOnePair(p_cards1);
-            auto l_val2 = getThePairValueFromOnePair(p_cards2);            
+            auto l_val1 = getTheSameValuesInOneHand(p_cards1);
+            auto l_val2 = getTheSameValuesInOneHand(p_cards2);            
             if (l_val1 == l_val2) 
             {
 								eraseTheSameValuesInTwoHands(l_val1, p_cards1, p_cards2);
-                int l_highest_val1 = findHighestVal(p_cards1);
-                int l_highest_val2 = findHighestVal(p_cards2);
-                if (l_highest_val1 == l_highest_val2)
-                {
-                    eraseTheSameValuesInTwoHands(l_highest_val1, p_cards1, p_cards2);
-                    int l_secondhigher_value1 = findHighestVal(p_cards1);
-                    int l_secondhigher_value2 = findHighestVal(p_cards2);
-                    if (l_secondhigher_value1 == l_secondhigher_value2)
-                    {
-                        eraseTheSameValuesInTwoHands(l_secondhigher_value1, p_cards1, p_cards2);                   	
-                   	} 	
-              	}
-                return findHighestVal(p_cards1) > findHighestVal(p_cards2) ? 1 : -1;          
+                return findTheMaxHand(p_cards1, p_cards2);  
             }
             else 
             {
@@ -70,7 +58,11 @@ CardsRank PokerHands::calcRank(vector<Card> p_cards)
 {
     CardsRank l_cr = CARDS_RANK_HIGH_CARD;
     
-    if (isTwoPairs(p_cards))
+    if (isThreeOfAKind(p_cards))
+    {
+    		l_cr = CARDS_RANK_THREE_OF_A_KIND;
+    }
+    else if (isTwoPairs(p_cards))
     {
         l_cr = CARDS_RANK_TWO_PAIRS;
     }
@@ -120,6 +112,19 @@ bool PokerHands::isTwoPairs(vector<Card> p_cards)
     }
 }
 
+
+bool PokerHands::isThreeOfAKind(vector<Card> p_cards)
+{
+    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
+    {
+       if(3 == count_if(p_cards.begin(),p_cards.end(),
+                        [&](Card p){return p.m_value == l_iter->m_value;}))
+           return true;
+    }
+    return false;
+}
+
+
 int PokerHands::findHighestVal(vector<Card> p_cards)
 {
     auto l_maxCard = max_element(p_cards.begin(),p_cards.end(),
@@ -128,16 +133,18 @@ int PokerHands::findHighestVal(vector<Card> p_cards)
     return l_maxCard->m_value; 
 }
 
-int PokerHands::getThePairValueFromOnePair(vector<Card> p_cards)
+
+int PokerHands::getTheSameValuesInOneHand(vector<Card> p_cards)
 {
     for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
     {
-       if(2 == count_if(p_cards.begin(),p_cards.end(),
+       if(1 < count_if(p_cards.begin(),p_cards.end(),
                         [&](Card p){return p.m_value == l_iter->m_value;}))
            return l_iter->m_value;
     }
     return INVALID_VALUE;
 }
+
 
 void PokerHands::eraseTheSameValuesInTwoHands(int p_val, vector<Card> & p_cards1, vector<Card> & p_cards2)
 {
@@ -145,4 +152,24 @@ void PokerHands::eraseTheSameValuesInTwoHands(int p_val, vector<Card> & p_cards1
         [=](auto p){return p.m_value == p_val;}), p_cards1.end());
     p_cards2.erase(remove_if(p_cards2.begin(), p_cards2.end(), 
         [=](auto p){return p.m_value == p_val;}), p_cards2.end());	
+}
+
+
+int PokerHands::findTheMaxHand(vector<Card> p_cards1, vector<Card> p_cards2)
+{
+	  int l_length = p_cards1.size();
+	  
+	  sort(p_cards1.begin(), p_cards1.end(), [](auto p1, auto p2) {return p2.m_value < p1.m_value;});
+	  sort(p_cards2.begin(), p_cards2.end(), [](auto p1, auto p2) {return p2.m_value < p1.m_value;});
+	  
+	  for (int i = 0; i < l_length; i++)
+	  {
+	      if(p_cards1[i].m_value != p_cards2[i].m_value)	
+	      {
+	          return p_cards1[i].m_value > p_cards2[i].m_value ? 1 : -1;
+	      }
+	  }
+	  
+    return INVALID_VALUE;     
+
 }

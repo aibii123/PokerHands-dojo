@@ -74,10 +74,19 @@ TEST_F(PokerHandsTestSuite, theOnePairHandWithHigherSmallestValueShouldWinInTwoH
 
 TEST_F(PokerHandsTestSuite, ThreeOfAKindHandWithHighestValueShouldWinThreeOfAKindWithSmallerValue)
 {
-    m_hand1 = {string("5H"), string("5C"), string("5S"), string("8D"), string("TH")};
-    m_hand2 = {string("6H"), string("7C"), string("6S"), string("8D"), string("TH")};
+    m_hand1 = {string("5H"), string("5C"), string("5S"), string("8D"), string("QH")};
+    m_hand2 = {string("6H"), string("6C"), string("6S"), string("8D"), string("TH")};
     
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
 }
-
+/*
+TEST_F(PokerHandsTestSuite, ThreeOfAKindHandWithHigherValueShouldWinSameThreeOfAKind)
+{
+    m_hand1 = {string("6H"), string("6C"), string("6S"), string("8D"), string("QH")};
+    m_hand2 = {string("6H"), string("7C"), string("6S"), string("8D"), string("TH")};
+    
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+*/

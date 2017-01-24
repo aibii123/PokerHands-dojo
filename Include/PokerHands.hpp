@@ -9,7 +9,8 @@ enum CardsRank
 {
     CARDS_RANK_HIGH_CARD = 0,
     CARDS_RANK_ONE_PAIR,
-    CARDS_RANK_TWO_PAIRS
+    CARDS_RANK_TWO_PAIRS,
+    CARDS_RANK_THREE_OF_A_KIND
 };
 
 class Card
@@ -28,8 +29,10 @@ public:
 private:
      bool isOnePair(vector<Card>);
      bool isTwoPairs(vector<Card>);
+     bool isThreeOfAKind(vector<Card> p_cards);
      CardsRank calcRank(vector<Card>);
      int findHighestVal(vector<Card>);
-     int getThePairValueFromOnePair(vector<Card>);
+     int getTheSameValuesInOneHand(vector<Card>);
      void eraseTheSameValuesInTwoHands(int p_val, vector<Card> & p_cards1, vector<Card> & p_cards2);
+     int findTheMaxHand(vector<Card> p_cards1, vector<Card> p_cards2);
 };
