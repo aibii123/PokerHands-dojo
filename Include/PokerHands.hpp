@@ -31,8 +31,8 @@ private:
      bool isTwoPairs(vector<Card>);
      bool isThreeOfAKind(vector<Card> p_cards);
      CardsRank calcRank(vector<Card>);
-     int findHighestVal(vector<Card>);
-     int getTheSameValuesInOneHand(vector<Card>);
+     int getTheOnlyOneSameValueInOneHand(vector<Card>);
+     void getPairValsInTwoPairsHand(vector<Card> p_cards, vector<int>& p_pairVals);
      void eraseTheSameValuesInTwoHands(int p_val, vector<Card> & p_cards1, vector<Card> & p_cards2);
      int findTheMaxHand(vector<Card> p_cards1, vector<Card> p_cards2);
 };

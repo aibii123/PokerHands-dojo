@@ -1,7 +1,7 @@
 #include "PokerHands.hpp"
 #include <map>
 #include <algorithm>
-
+#include <assert.h>
 map<char, int> g_map 
 {
     {'2', 2},
@@ -10,7 +10,8 @@ map<char, int> g_map
     {'5', 5},
     {'6', 6},
     {'7', 7},
-    {'8', 9},
+    {'8', 8},
+    {'9', 9},
     {'T', 10},
     {'J', 11},
     {'Q', 12},
@@ -36,8 +37,8 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
     {
         if (CARDS_RANK_ONE_PAIR == l_c1  or CARDS_RANK_THREE_OF_A_KIND == l_c1)
         {
-            auto l_val1 = getTheSameValuesInOneHand(p_cards1);
-            auto l_val2 = getTheSameValuesInOneHand(p_cards2);            
+            auto l_val1 = getTheOnlyOneSameValueInOneHand(p_cards1);
+            auto l_val2 = getTheOnlyOneSameValueInOneHand(p_cards2);            
             if (l_val1 == l_val2) 
             {
 								eraseTheSameValuesInTwoHands(l_val1, p_cards1, p_cards2);
@@ -48,7 +49,25 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
                 return l_val1 > l_val2 ? 1 : -1;  
             }            
         }
-        return findHighestVal(p_cards1) > findHighestVal(p_cards2) ? 1 : -1;
+        else if (CARDS_RANK_TWO_PAIRS == l_c1)
+        {
+           vector<int> l_pairVals1;
+           vector<int> l_pairVals2;
+           getPairValsInTwoPairsHand(p_cards1, l_pairVals1);	        	            
+           getPairValsInTwoPairsHand(p_cards2, l_pairVals2);
+           if (l_pairVals1[0] != l_pairVals2[0])
+           {           		
+               return l_pairVals1[0] > l_pairVals2[0] ? 1 : -1;	
+           }
+           else if ((l_pairVals1[1])== (l_pairVals2[1]))
+           {
+           	   eraseTheSameValuesInTwoHands(l_pairVals1[0], p_cards1, p_cards2);
+           	   eraseTheSameValuesInTwoHands(l_pairVals1[1], p_cards1, p_cards2);
+           	   return (*p_cards1.begin()).m_value > (*p_cards2.begin()).m_value ? 1 : -1;
+           }
+           return (l_pairVals1[1]) > (l_pairVals2[1]) ? 1 : -1;	           
+        }
+        return findTheMaxHand(p_cards1, p_cards2);
     }
     
     return l_c1 > l_c2 ? 1 : -1;
@@ -124,17 +143,7 @@ bool PokerHands::isThreeOfAKind(vector<Card> p_cards)
     return false;
 }
 
-
-int PokerHands::findHighestVal(vector<Card> p_cards)
-{
-    auto l_maxCard = max_element(p_cards.begin(),p_cards.end(),
-                       [](auto const p1, auto const p2){return p1.m_value < p2.m_value;});
-    
-    return l_maxCard->m_value; 
-}
-
-
-int PokerHands::getTheSameValuesInOneHand(vector<Card> p_cards)
+int PokerHands::getTheOnlyOneSameValueInOneHand(vector<Card> p_cards)
 {
     for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
     {
@@ -145,6 +154,23 @@ int PokerHands::getTheSameValuesInOneHand(vector<Card> p_cards)
     return INVALID_VALUE;
 }
 
+
+void PokerHands::getPairValsInTwoPairsHand(vector<Card> p_cards, vector<int>& p_pairVals)
+{
+   sort(p_cards.begin(), p_cards.end(), 
+         [](auto const p1, auto const p2){return p2.m_value < p1.m_value;});// in descending order
+
+    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
+    {
+        if(2 == count_if(p_cards.begin(),p_cards.end(),
+                        [&](Card p){return p.m_value == l_iter->m_value;}))
+        {
+        	  
+            p_pairVals.push_back(l_iter->m_value);//Appends the given element value to the end of the container,in descending order
+            l_iter++;
+        }
+    }
+}
 
 void PokerHands::eraseTheSameValuesInTwoHands(int p_val, vector<Card> & p_cards1, vector<Card> & p_cards2)
 {
