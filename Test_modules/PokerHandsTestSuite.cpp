@@ -13,7 +13,7 @@ TEST_F(PokerHandsTestSuite, onePairShouldWinHighCard)
 {
     m_hand1 = {string("5H"), string("6C"), string("7S"), string("8D"), string("TH")};
     m_hand2 = {string("5H"), string("5C"), string("7S"), string("8D"), string("TH")};
-    
+
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
 }
@@ -22,7 +22,7 @@ TEST_F(PokerHandsTestSuite, twoPairsShouldWinOnePair)
 {
     m_hand1 = {string("5H"), string("5C"), string("7S"), string("7D"), string("TH")};
     m_hand2 = {string("5H"), string("5C"), string("7S"), string("8D"), string("TH")};
-    
+
     ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
 }
@@ -40,7 +40,7 @@ TEST_F(PokerHandsTestSuite, onePairCardWithHighestValueShouldWinOnePairWithLessV
 {
     m_hand1 = {string("5H"), string("5C"), string("7S"), string("8D"), string("TH")};
     m_hand2 = {string("QH"), string("7C"), string("7S"), string("8D"), string("TH")};
-    
+
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
 }
@@ -112,7 +112,7 @@ TEST_F(PokerHandsTestSuite, ThreeOfAKindHandWithHighestValueShouldWinThreeOfAKin
 {
     m_hand1 = {string("5H"), string("5C"), string("5S"), string("8D"), string("QH")};
     m_hand2 = {string("6H"), string("6C"), string("6S"), string("8D"), string("TH")};
-    
+
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
 }
@@ -120,8 +120,8 @@ TEST_F(PokerHandsTestSuite, ThreeOfAKindHandWithHighestValueShouldWinThreeOfAKin
 TEST_F(PokerHandsTestSuite, ThreeOfAKindHandWithHigherValueShouldWinSameThreeOfAKind)
 {
     m_hand1 = {string("6H"), string("6C"), string("6S"), string("8D"), string("QH")};
-    m_hand2 = {string("6H"), string("7C"), string("6S"), string("8D"), string("TH")};
-    
+    m_hand2 = {string("6H"), string("6C"), string("6S"), string("8D"), string("TH")};
+
     ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
 }
@@ -129,9 +129,62 @@ TEST_F(PokerHandsTestSuite, ThreeOfAKindHandWithHigherValueShouldWinSameThreeOfA
 TEST_F(PokerHandsTestSuite, ThreeOfAKindHandWithHigherValueShouldWinSameThreeOfAKindAndSameOneHigherValue)
 {
     m_hand1 = {string("6H"), string("6C"), string("6S"), string("8D"), string("QH")};
-    m_hand2 = {string("6H"), string("7C"), string("6S"), string("7D"), string("QH")};
-    
+    m_hand2 = {string("6H"), string("6C"), string("6S"), string("7D"), string("QH")};
+
     ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
 }
 
+TEST_F(PokerHandsTestSuite, StraightHandShouldWinThreeOfAKindHand)
+{
+    m_hand1 = {string("5H"), string("6C"), string("7S"), string("8D"), string("9H")};
+    m_hand2 = {string("6H"), string("6C"), string("6S"), string("7D"), string("QH")};
+
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+TEST_F(PokerHandsTestSuite, StraightHandWithHigherValShouldWinTheOtherStraightHand)
+{
+    m_hand1 = {string("5H"), string("6C"), string("7S"), string("8D"), string("9H")};
+    m_hand2 = {string("6H"), string("7C"), string("8S"), string("9D"), string("TH")};
+
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+TEST_F(PokerHandsTestSuite, FlushHandShouldWinStraightHand)
+{
+    m_hand1 = {string("5H"), string("6C"), string("7S"), string("8D"), string("9H")};
+    m_hand2 = {string("6H"), string("6H"), string("6H"), string("7H"), string("QH")};
+
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+TEST_F(PokerHandsTestSuite, FlushHandWitheHigherValShouldWinTheOtherFlushHand)
+{
+    m_hand1 = {string("5C"), string("6C"), string("7C"), string("8C"), string("9C")};
+    m_hand2 = {string("6H"), string("6H"), string("6H"), string("7H"), string("QH")};
+
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+TEST_F(PokerHandsTestSuite, FullHouseHandShouldWinFlushHand)
+{
+    m_hand1 = {string("5H"), string("5C"), string("5S"), string("8D"), string("8H")};
+    m_hand2 = {string("6H"), string("6H"), string("6H"), string("7H"), string("QH")};
+
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+TEST_F(PokerHandsTestSuite, FullHouseHandWithHigherValShouldWinTheOtherFullHouseHand)
+{
+    m_hand1 = {string("5H"), string("5C"), string("5S"), string("8D"), string("8H")};
+    m_hand2 = {string("6H"), string("6H"), string("6H"), string("4H"), string("4H")};
+
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
+}
