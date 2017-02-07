@@ -15,19 +15,18 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
     {
         vector<int> l_pairVals1;
         vector<int> l_pairVals2;
-        if (CARDS_RANK_ONE_PAIR == l_c1  or 
-            CARDS_RANK_THREE_OF_A_KIND == l_c1 or 
-            CARDS_RANK_TWO_PAIRS == l_c1 or 
-            CARDS_RANK_FULLHOUSE_KIND == l_c1)
+        if (CARDS_RANK_ONE_PAIR == l_c1  or
+            CARDS_RANK_THREE_OF_A_KIND == l_c1 or
+            CARDS_RANK_TWO_PAIRS == l_c1 or
+            CARDS_RANK_FULLHOUSE_KIND == l_c1 or CARDS_RANK_FOUR_OF_A_KIND == l_c1)
         {
             getPairVals(p_cards1, l_pairVals1);
             getPairVals(p_cards2, l_pairVals2);
             if (l_pairVals1[0] != l_pairVals2[0])
             {
                 return l_pairVals1[0] > l_pairVals2[0] ? 1 : -1;
-                
             }
-            else if((CARDS_RANK_ONE_PAIR == l_c1  or CARDS_RANK_THREE_OF_A_KIND == l_c1)
+            else if((CARDS_RANK_ONE_PAIR == l_c1  or CARDS_RANK_THREE_OF_A_KIND == l_c1 or CARDS_RANK_FOUR_OF_A_KIND == l_c1)
                      and l_pairVals1[0] == l_pairVals2[0])
             {
                 eraseValuesInTwoHands(l_pairVals1, p_cards1, p_cards2);
@@ -40,7 +39,7 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
             else
             {
                return l_pairVals1[1] > l_pairVals2[1] ? 1 : -1;
-            }  
+            }
         }
         return findTheMaxHand(p_cards1, p_cards2);
     }
@@ -51,7 +50,11 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
 CardsRank PokerHands::calcRank(vector<Card> p_cards)
 {
     CardsRank l_cr = CARDS_RANK_HIGH_CARD;
-    if(isFullHouseKind(p_cards))
+    if (isFourOfAKind(p_cards))
+    {
+        l_cr = CARDS_RANK_FOUR_OF_A_KIND;
+    }
+    else if (isFullHouseKind(p_cards))
     {
         l_cr = CARDS_RANK_FULLHOUSE_KIND;
     }
@@ -164,6 +167,16 @@ bool PokerHands::isFlushKind(vector<Card> p_cards)
 }
 
 
+bool PokerHands::isFourOfAKind(vector<Card> p_cards)
+{
+    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
+    {
+       if(4 == count_if(p_cards.begin(),p_cards.end(),
+                        [&](Card p){return p.m_value == l_iter->m_value;}))
+           return true;
+    }
+    return false;
+}
 bool PokerHands::isFullHouseKind(vector<Card> p_cards)
 {
     sort(p_cards.begin(), p_cards.end(), [](auto p1, auto p2) {return p2.m_value < p1.m_value;});
@@ -198,7 +211,7 @@ void PokerHands::getPairVals(vector<Card> p_cards, vector<int>& p_pairVals)
 {
     sort(p_cards.begin(), p_cards.end(),
         [](auto const p1, auto const p2){return p2.m_value < p1.m_value;});// in descending order
-        
+
     for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
     {
         int l_numVals = count_if(p_cards.begin(),p_cards.end(),
@@ -210,7 +223,7 @@ void PokerHands::getPairVals(vector<Card> p_cards, vector<int>& p_pairVals)
                 p_pairVals.insert(p_pairVals.begin(),l_iter->m_value);
             }
             p_pairVals.push_back(l_iter->m_value);//Appends the given element value to the end of the container,in descending order
-                       
+
             l_iter+=(l_numVals-1);
         }
     }
