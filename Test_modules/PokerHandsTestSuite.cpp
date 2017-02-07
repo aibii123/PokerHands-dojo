@@ -234,3 +234,13 @@ TEST_F(PokerHandsTestSuite, StraightFlushHandWithHigherValShouldWinTheOtherStrai
     ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
 }
 
+TEST_F(PokerHandsTestSuite, RoyalFlushHandShouldWinStraightFlushHand)
+{
+    m_hand1 = {string("TH"), string("JH"), string("KH"), string("QH"), string("AH")};
+    m_hand2 = {string("7H"), string("8H"), string("9H"), string("TH"), string("JH")};
+
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+
