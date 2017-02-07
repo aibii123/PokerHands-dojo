@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include "Card.hpp"
 #include <vector>
 
 using namespace std;
@@ -16,14 +16,6 @@ enum CardsRank
     CARDS_RANK_FULLHOUSE_KIND
 };
 
-class Card
-{
-public:
-    Card(const string&);
-
-    int m_value;
-    char m_suit;
-};
 
 class PokerHands
 {
@@ -37,10 +29,7 @@ private:
      bool isStraightKind(vector<Card> p_cards);
      bool isFullHouseKind(vector<Card> p_cards);
      CardsRank calcRank(vector<Card>);
-     int getTheOnlyOneSameValueInOneHand(vector<Card>);
-     void getPairValsInFullHouseHand(vector<Card> p_cards, vector<int>& p_pairVals);
-     void getPairValsInTwoPairsHand(vector<Card> p_cards, vector<int>& p_pairVals);
-     void getThreeOfAKindVal(vector<Card> p_cards, vector<int>& p_pairVals);
-     void eraseTheSameValuesInTwoHands(int p_val, vector<Card> & p_cards1, vector<Card> & p_cards2);
+     void getPairVals(vector<Card> p_cards, vector<int>& p_pairVals);
+     void eraseValuesInTwoHands(vector<int> p_erasedvals, vector<Card> & p_cards1, vector<Card> & p_cards2);
      int findTheMaxHand(vector<Card> p_cards1, vector<Card> p_cards2);
 };

@@ -1,17 +1,13 @@
 #pragma once
-
 #include <string>
 #include <map>
+using namespace std;
 
 class Card
 {
 public:
-    Card(const std::string&);
-    int value(){return m_value;}
-    char suit(){return m_suit;}
+    Card(const string&);
 
-private:
     int m_value;
     char m_suit;
-    static std::map<char, int> m_values;
 };
