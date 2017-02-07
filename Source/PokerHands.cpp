@@ -43,14 +43,18 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
         }
         return findTheMaxHand(p_cards1, p_cards2);
     }
-
+        
     return l_c1 > l_c2 ? 1 : -1;
 }
 
 CardsRank PokerHands::calcRank(vector<Card> p_cards)
 {
     CardsRank l_cr = CARDS_RANK_HIGH_CARD;
-    if (isFourOfAKind(p_cards))
+    if(isStraightFlushKind(p_cards))
+    {
+        l_cr = CARDS_RANK_STRAIGHT_FLUSH_KIND;
+    }
+    else if (isFourOfAKind(p_cards))
     {
         l_cr = CARDS_RANK_FOUR_OF_A_KIND;
     }
@@ -203,6 +207,16 @@ bool PokerHands::isFullHouseKind(vector<Card> p_cards)
         return true;
     }
 
+    return false;
+}
+
+
+bool PokerHands::isStraightFlushKind(vector<Card> p_cards)
+{
+    if (isStraightKind(p_cards) and isFlushKind(p_cards))
+    {
+        return true;
+    }
     return false;
 }
 
