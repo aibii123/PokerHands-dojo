@@ -12,5 +12,5 @@ public:
     char m_suit;
     
 private:
-    static map<char, int> m_map;
+    const static map<char, int> m_map;
 };
