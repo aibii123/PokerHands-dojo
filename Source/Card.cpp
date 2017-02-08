@@ -1,5 +1,6 @@
 #include "Card.hpp"
-map<char, int> g_map =
+
+map<char, int> Card::m_map=
     {
         {'2', 2},
         {'3', 3},
@@ -15,8 +16,11 @@ map<char, int> g_map =
         {'K', 13},
         {'A', 14}
     };
+
 Card::Card(const string& p_cardVal)
 {
-    m_value = g_map[p_cardVal[0]];
+    m_value = m_map[p_cardVal[0]];
     m_suit = p_cardVal[1];
 }
+
+

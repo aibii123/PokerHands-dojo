@@ -10,4 +10,7 @@ public:
 
     int m_value;
     char m_suit;
+    
+private:
+    static map<char, int> m_map;
 };

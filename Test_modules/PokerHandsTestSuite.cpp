@@ -11,6 +11,7 @@ public:
     PokerHands   m_pokerhands;
 };
 
+
 TEST_F(PokerHandsTestSuite, onePairShouldWinHighCard)
 {
     m_hand1 = {string("5H"), string("6C"), string("7S"), string("8D"), string("TH")};
