@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 #include "PokerHands.hpp"
+#include <fstream>
+#include <algorithm>
 
 class PokerHandsTestSuite : public ::testing::Test
 {
@@ -241,6 +243,37 @@ TEST_F(PokerHandsTestSuite, RoyalFlushHandShouldWinStraightFlushHand)
 
     ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+TEST_F(PokerHandsTestSuite, FindHowManyPlayers1Win)
+{
+    ifstream infile;
+
+    infile.open("p054_poker.txt", ios::in);
+    string strs;
+    int l_numCount = 0;
+    while (!infile.eof())
+    {
+        getline(infile,strs);
+
+        if(!strs.empty())   
+        {
+            //cout<<strs<<endl;
+            //cout<<"------------------"<<endl;
+            //strs.replace(strs.begin(),strs.end()," ","");
+            strs.erase(remove_if(strs.begin(),strs.end(),[](auto p){return isspace(p);}),strs.end());
+            m_hand1 = {strs.substr(0,2),strs.substr(2,2),strs.substr(4,2),strs.substr(6,2),strs.substr(8,2),};
+            m_hand2 = {strs.substr(10,2),strs.substr(12,2),strs.substr(14,2),strs.substr(16,2),strs.substr(18,2),};
+            int l_result = m_pokerhands.compare(m_hand1, m_hand2);
+            if (1 == l_result)
+            {
+                l_numCount++;
+            }
+        }
+
+    }
+    
+    ASSERT_EQ(376, l_numCount);
 }
 
 

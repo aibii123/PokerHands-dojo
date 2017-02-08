@@ -43,7 +43,7 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
         }
         return findTheMaxHand(p_cards1, p_cards2);
     }
-        
+
     return l_c1 > l_c2 ? 1 : -1;
 }
 
@@ -274,3 +274,5 @@ int PokerHands::findTheMaxHand(vector<Card> p_cards1, vector<Card> p_cards2)
     return INVALID_VALUE;
 
 }
+
+
