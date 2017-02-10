@@ -246,7 +246,7 @@ TEST_F(PokerHandsTestSuite, RoyalFlushHandShouldWinStraightFlushHand)
     ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
 }
 
-TEST_F(PokerHandsTestSuite, FindHowManyPlayers1Win)
+/*TEST_F(PokerHandsTestSuite, FindHowManyPlayers1Win1)
 {
     ifstream infile;
 
@@ -270,6 +270,42 @@ TEST_F(PokerHandsTestSuite, FindHowManyPlayers1Win)
             {
                 l_numCount++;
             }
+        }
+
+    }
+    
+    ASSERT_EQ(376, l_numCount);
+}*/
+
+TEST_F(PokerHandsTestSuite, FindHowManyPlayers1Win)
+{
+    ifstream infile;
+
+    infile.open("p054_poker.txt", ios::in);
+    string strs;
+    int l_numCount = 0;
+    int l_result;
+    while (!infile.eof())
+    {
+        infile >> strs;
+
+        if ( m_hand1.size() < 5 )
+        {
+            m_hand1.emplace_back(strs);
+        }
+        else if(m_hand2.size() < 5 )
+        {
+            m_hand2.emplace_back(strs);
+        }
+        if(5 == m_hand1.size() and 5 == m_hand2.size())  
+        {
+            l_result = m_pokerhands.compare(m_hand1, m_hand2);
+            if (1 == l_result)
+            {
+                l_numCount++;
+            }
+            m_hand1.clear();
+            m_hand2.clear();
         }
 
     }

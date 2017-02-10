@@ -148,7 +148,7 @@ bool PokerHands::isStraightKind(vector<Card> p_cards)
            return false;
        }
     }
-    if (4 ==  (p_cards.begin() -> m_value - (p_cards.rbegin())-> m_value))
+    if (4 ==  (p_cards.begin() -> m_value - (p_cards.rbegin())->m_value))
     {
         return true;
     }
