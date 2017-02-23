@@ -192,6 +192,16 @@ TEST_F(PokerHandsTestSuite, FullHouseHandWithHigherValShouldWinTheOtherFullHouse
     ASSERT_EQ(1, m_pokerhands.compare(m_hand2, m_hand1));
 }
 
+TEST_F(PokerHandsTestSuite, FullHouseHandWithHigherValShouldWinTheOtherFullHouseHand0)
+{
+    m_hand1 = {string("5H"), string("5C"), string("5S"), string("8D"), string("8H")};
+    m_hand2 = {string("5H"), string("5H"), string("5H"), string("4C"), string("4H")};
+
+    ASSERT_EQ(1, m_pokerhands.compare(m_hand1, m_hand2));
+    ASSERT_EQ(-1, m_pokerhands.compare(m_hand2, m_hand1));
+}
+
+
 TEST_F(PokerHandsTestSuite, FourOfAKindHandShouldWinFullHouseHand)
 {
     m_hand1 = {string("5H"), string("5C"), string("5S"), string("8D"), string("8H")};

@@ -20,8 +20,10 @@ int PokerHands::compare(vector<Card> p_cards1, vector<Card> p_cards2)
             CARDS_RANK_TWO_PAIRS == l_c1 or
             CARDS_RANK_FULLHOUSE_KIND == l_c1 or CARDS_RANK_FOUR_OF_A_KIND == l_c1)
         {
-            getPairVals(p_cards1, l_pairVals1);
-            getPairVals(p_cards2, l_pairVals2);
+            getSameVals(p_cards1, l_pairVals1);
+            getSameVals(p_cards2, l_pairVals2);
+//        if (true == l_hasSameVals)
+//        {
             if (l_pairVals1[0] != l_pairVals2[0])
             {
                 return l_pairVals1[0] > l_pairVals2[0] ? 1 : -1;
@@ -62,7 +64,7 @@ CardsRank PokerHands::calcRank(vector<Card> p_cards)
     {
         l_cr = CARDS_RANK_FULLHOUSE_KIND;
     }
-    else if(isFlushKind(p_cards))
+    else if (isFlushKind(p_cards))
     {
         l_cr = CARDS_RANK_FLUSH_KIND;
     }
@@ -140,40 +142,45 @@ bool PokerHands::isThreeOfAKind(vector<Card> p_cards)
 bool PokerHands::isStraightKind(vector<Card> p_cards)
 {
     sort(p_cards.begin(), p_cards.end(), [](auto p1, auto p2) {return p2.m_value < p1.m_value;});
-    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
-    {
-       if(1 < count_if(p_cards.begin(),p_cards.end(),
-                        [&](Card p){return p.m_value == l_iter->m_value;}))
-       {
-           return false;
-       }
-    }
-    if (4 ==  (p_cards.begin() -> m_value - (p_cards.rbegin())->m_value))
-    {
-        return true;
-    }
-    return false;
+//    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
+//    {
+//       if(1 < count_if(p_cards.begin(),p_cards.end(),
+//                        [&](Card p){return p.m_value == l_iter->m_value;}))
+//       {
+//           return false;
+//       }
+//    }
+    auto l_result = adjacent_find(p_cards.begin(),p_cards.end(),[](auto p1, auto p2) {return p2.m_value != (p1.m_value - 1);});
+    return l_result == p_cards.end();
+//    if (4 ==  (p_cards.begin() -> m_value - (p_cards.rbegin())->m_value))
+//    {
+//        return true;
+//    }
+//    return false;
 }
 
 
 bool PokerHands::isFlushKind(vector<Card> p_cards)
 {
     sort(p_cards.begin(), p_cards.end(), [](auto p1, auto p2) {return p2.m_value < p1.m_value;});
-    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
-    {
-       if(5 == count_if(p_cards.begin(),p_cards.end(),
-                        [&](Card p){return p.m_suit == l_iter->m_suit;}))
-       {
-           return true;
-       }
-    }
-    return false;
+//    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
+//    {
+//       if(5 == count_if(p_cards.begin(),p_cards.end(),
+//                        [&](Card p){return p.m_suit == l_iter->m_suit;}))
+//       {
+//           return true;
+//       }
+//    }
+    auto l_result = adjacent_find(p_cards.begin(),p_cards.end(),[](auto p1, auto p2) {return p2.m_suit != p1.m_suit;});
+    return l_result == p_cards.end();
+
+//    return false;
 }
 
 
 bool PokerHands::isFourOfAKind(vector<Card> p_cards)
 {
-    for(auto l_iter = p_cards.begin(); l_iter != p_cards.end(); l_iter++)
+    for(auto l_iter = p_cards.begin(); l_iter != next( p_cards.begin(),2) ; l_iter++)
     {
        if(4 == count_if(p_cards.begin(),p_cards.end(),
                         [&](Card p){return p.m_value == l_iter->m_value;}))
@@ -221,7 +228,7 @@ bool PokerHands::isStraightFlushKind(vector<Card> p_cards)
 }
 
 
-void PokerHands::getPairVals(vector<Card> p_cards, vector<int>& p_pairVals)
+void PokerHands::getSameVals(vector<Card> p_cards, vector<int>& p_pairVals)
 {
     sort(p_cards.begin(), p_cards.end(),
         [](auto const p1, auto const p2){return p2.m_value < p1.m_value;});// in descending order
@@ -232,15 +239,23 @@ void PokerHands::getPairVals(vector<Card> p_cards, vector<int>& p_pairVals)
                         [&](Card p){return p.m_value == l_iter->m_value;});
         if(l_numVals > 1)
         {
-            if(l_numVals == 3)
+            if(l_numVals == 3)//mark may wrong
             {
                 p_pairVals.insert(p_pairVals.begin(),l_iter->m_value);
             }
-            p_pairVals.push_back(l_iter->m_value);//Appends the given element value to the end of the container,in descending order
+            else
+            {
+                p_pairVals.push_back(l_iter->m_value);//Appends the given element value to the end of the container,in descending order
+            }
 
             l_iter+=(l_numVals-1);
         }
     }
+//    if (p_pairVals.size() != 0)
+//    {
+//        return true;
+//    }
+//    return false;
 
 }
 

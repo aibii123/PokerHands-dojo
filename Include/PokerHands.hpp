@@ -33,7 +33,8 @@ private:
      bool isFourOfAKind(vector<Card> p_cards);
      bool isStraightFlushKind(vector<Card> p_cards);
      CardsRank calcRank(vector<Card>);
-     void getPairVals(vector<Card> p_cards, vector<int>& p_pairVals);
+     void getSameVals(vector<Card> p_cards, vector<int>& p_pairVals);
      void eraseValuesInTwoHands(vector<int> p_erasedvals, vector<Card> & p_cards1, vector<Card> & p_cards2);
      int findTheMaxHand(vector<Card> p_cards1, vector<Card> p_cards2);
+    // using Comparer = map<CardsRank,function<>>
 };
